@@ -1,0 +1,21 @@
+name: rdkit
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - pip
+  - pandas
+  - boto3
+  - openpyxl
+  - rdkit=2023.03.3
+  - networkx
+  - streamlit
+  - matplotlib
+  - seaborn
+  - plotly
+  - time
+  - fsspec
+  - pyarrow
+  - fastparquet
+  - s3fs
+  - pygraphviz
