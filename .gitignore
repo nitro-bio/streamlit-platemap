@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -110,3 +111,6 @@ cookiecutter-pypackage-env/
 .streamlit/secrets.toml
 
 **/node_modules/
+=======
+/.streamlit/
+>>>>>>> Stashed changes

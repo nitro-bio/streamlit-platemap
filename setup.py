@@ -6,11 +6,11 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
-    name="molecule3dplot",
+    name="streamlit_platemap",
     version="0.1.0",
     author="Nishant Jha",
     author_email="nishant@nitro.bio",
-    description="Streamlit component for 3D Plotly plot w/ custom Molecule overlay",
+    description="Streamlit component for Platemap",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(where="src"),
