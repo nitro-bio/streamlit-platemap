@@ -1,21 +1,32 @@
 import { z } from "zod";
 
+const color = z.union([
+  z.literal("red"),
+  z.literal("green"),
+  z.literal("blue"),
+  z.literal("yellow"),
+  z.literal("cyan"),
+  z.literal("fuchsia"),
+]);
 const WellAnnotation = z.object({
   id: z.string(),
   wells: z.array(z.number()),
   label: z.string(),
+  color: color,
 });
 
 const RowAnnotation = z.object({
   id: z.string(),
   rows: z.array(z.number()),
   label: z.string(),
+  color: color,
 });
 
 const ColAnnotation = z.object({
   id: z.string(),
   cols: z.array(z.number()),
   label: z.string(),
+  color: color,
 });
 
 export const StreamlitDataSchema = z.object({

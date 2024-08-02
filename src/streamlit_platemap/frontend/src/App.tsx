@@ -1,16 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 
-import { useMock } from "./hooks/useMock";
-import { useStreamlit } from "./hooks/useStreamlit";
-import { StreamlitData, StreamlitDataSchema } from "./schemas";
 import { Card, NitroContextMenu, classNames } from "@ninjha01/nitro-ui";
 import {
   Plate,
   PlateSelection,
   WellAnnotation,
 } from "@nitro-bio/nitro-ui-premium";
-import { z } from "zod";
 import { useDebounce } from "./hooks/useDebounce";
+import { useMock } from "./hooks/useMock";
+import { useStreamlit } from "./hooks/useStreamlit";
+import { StreamlitData, StreamlitDataSchema } from "./schemas";
+
+type ExternalWellAnnotation = Omit<WellAnnotation<any>, "className"> & {
+  color: any;
+};
 
 function App() {
   const ref = useRef<HTMLDivElement>(null);
@@ -20,8 +23,8 @@ function App() {
   });
 
   const [internalWellAnnotations, setInternalWellAnnotations] = useState<
-    Omit<WellAnnotation<any>, "className">[]
-  >([]);
+    ExternalWellAnnotation[] | null
+  >(data?.wellAnnotations ?? null);
 
   const debouncedInternalWellAnnotations = useDebounce({
     value: internalWellAnnotations,
@@ -31,6 +34,10 @@ function App() {
   useEffect(
     function sendSelectedDataIndicesToStreamlit() {
       if (data) {
+        if (debouncedInternalWellAnnotations === null) {
+          console.log("skipping streamlit update");
+          return;
+        }
         const next = {
           ...data,
           wellAnnotations: debouncedInternalWellAnnotations,
@@ -40,7 +47,7 @@ function App() {
     },
     [debouncedInternalWellAnnotations],
   );
-  useMock({ schema: StreamlitDataSchema });
+  // useMock({ schema: StreamlitDataSchema });
 
   const [selection, setSelection] = useState<PlateSelection | null>(null);
   if (!data) {
@@ -56,17 +63,17 @@ function App() {
               wells={data.wells}
               selection={selection}
               setSelection={setSelection}
-              wellAnnotations={data.wellAnnotations.map((x, i) => ({
+              wellAnnotations={data.wellAnnotations.map((x) => ({
                 ...x,
-                className: colors[i % colors.length],
+                className: colorToClassName[x.color],
               }))}
-              rowAnnotations={data.rowAnnotations.map((x, i) => ({
+              rowAnnotations={data.rowAnnotations.map((x) => ({
                 ...x,
-                className: colors[i % colors.length],
+                className: colorToClassName[x.color],
               }))}
-              colAnnotations={data.colAnnotations.map((x, i) => ({
+              colAnnotations={data.colAnnotations.map((x) => ({
                 ...x,
-                className: colors[i % colors.length],
+                className: colorToClassName[x.color],
               }))}
             />
           }
@@ -80,13 +87,16 @@ function App() {
                   label: ann.label,
                   onClick: () => {
                     if (selection) {
-                      setInternalWellAnnotations((prev) => {
-                        const newAnn = {
-                          ...ann,
-                          wells: [...ann.wells, ...selection.wells],
-                        };
-                        return [...prev.filter((a) => a.id !== ann.id), newAnn];
-                      });
+                      const newAnn = {
+                        ...ann,
+                        wells: [...ann.wells, ...selection.wells],
+                      };
+                      const prevWithoutAnn = data.wellAnnotations.filter(
+                        (a) => a.id !== ann.id,
+                      );
+                      const next = [...prevWithoutAnn, newAnn];
+
+                      setInternalWellAnnotations(next);
                       setSelection(null);
                     } else {
                       alert("Select wells first");
@@ -120,11 +130,11 @@ function App() {
 }
 export default App;
 
-const colors = [
-  "bg-rose-400 text-rose-800",
-  "bg-emerald-400 text-emerald-800",
-  "bg-sky-400 text-sky-800",
-  "bg-amber-400 text-amber-800",
-  "bg-cyan-400 text-cyan-800",
-  "bg-fuchsia-400 text-fuchsia-800",
-];
+const colorToClassName = {
+  red: "bg-rose-400 text-rose-800",
+  green: "bg-emerald-400 text-emerald-800",
+  blue: "bg-sky-400 text-sky-800",
+  yellow: "bg-amber-400 text-amber-800",
+  cyan: "bg-cyan-400 text-cyan-800",
+  fuchsia: "bg-fuchsia-400 text-fuchsia-800",
+};

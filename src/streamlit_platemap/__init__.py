@@ -6,12 +6,22 @@ import streamlit.components.v1 as components
 from dataclasses import dataclass
 from typing import List, Optional, Union
 
+COLOR = Union[
+    Literal["red"],
+    Literal["green"],
+    Literal["blue"],
+    Literal["yellow"],
+    Literal["cyan"],
+    Literal["fuchsia"],
+]
+
 
 @dataclass
 class WellAnnotation:
     id: str
     wells: List[int]
     label: str
+    color: COLOR
 
 
 @dataclass
@@ -19,6 +29,7 @@ class RowAnnotation:
     id: str
     rows: List[int]
     label: str
+    color: COLOR
 
 
 @dataclass
@@ -26,6 +37,7 @@ class ColAnnotation:
     id: str
     cols: List[int]
     label: str
+    color: COLOR
 
 
 @dataclass
@@ -54,6 +66,4 @@ def streamlit_platemap(data: Dict[str, Any]) -> List[WellAnnotation]:
     if component_value is None:
         return []
     else:
-        # TODO: add return value
-        print(f"{component_value=}")
         return component_value["wellAnnotations"]
