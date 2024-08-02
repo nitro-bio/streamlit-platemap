@@ -35,10 +35,8 @@ export const useStreamlit = <T extends Record<string, unknown>>({
         if (parsed.success) {
           setData(parsed.data);
         } else {
-          console.error(parsed.error);
-          throw new Error(
-            `Invalid data from Streamlit: ${JSON.stringify(event.data.args)}`,
-          );
+          console.error(parsed.error.message);
+          throw new Error(parsed.error.message);
         }
       }
     }

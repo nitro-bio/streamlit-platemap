@@ -20,7 +20,7 @@ function App() {
   });
 
   const [internalWellAnnotations, setInternalWellAnnotations] = useState<
-    WellAnnotation<any>[]
+    Omit<WellAnnotation<any>, "className">[]
   >([]);
 
   const debouncedInternalWellAnnotations = useDebounce({
@@ -53,12 +53,21 @@ function App() {
           trigger={
             <Plate
               className="mr-2 pb-8"
-              wells={24}
+              wells={data.wells}
               selection={selection}
               setSelection={setSelection}
-              wellAnnotations={data.wellAnnotations}
-              rowAnnotations={data.rowAnnotations}
-              colAnnotations={data.colAnnotations}
+              wellAnnotations={data.wellAnnotations.map((x, i) => ({
+                ...x,
+                className: colors[i % colors.length],
+              }))}
+              rowAnnotations={data.rowAnnotations.map((x, i) => ({
+                ...x,
+                className: colors[i % colors.length],
+              }))}
+              colAnnotations={data.colAnnotations.map((x, i) => ({
+                ...x,
+                className: colors[i % colors.length],
+              }))}
             />
           }
           groups={[
@@ -110,3 +119,12 @@ function App() {
   );
 }
 export default App;
+
+const colors = [
+  "bg-rose-400 text-rose-800",
+  "bg-emerald-400 text-emerald-800",
+  "bg-sky-400 text-sky-800",
+  "bg-amber-400 text-amber-800",
+  "bg-cyan-400 text-cyan-800",
+  "bg-fuchsia-400 text-fuchsia-800",
+];
