@@ -10,25 +10,35 @@ import {
   WellAnnotation,
 } from "@nitro-bio/nitro-ui-premium";
 import { z } from "zod";
+import { useDebounce } from "./hooks/useDebounce";
 
 function App() {
   const ref = useRef<HTMLDivElement>(null);
-  const { data, setData } = useStreamlit<any>({
+  const { data, setData } = useStreamlit<StreamlitData>({
     ref,
-    zodSchema: z.any(),
+    zodSchema: StreamlitDataSchema,
   });
-  const [foo, setFoo] = useState<string | null>(null);
+
+  const [internalWellAnnotations, setInternalWellAnnotations] = useState<
+    WellAnnotation<any>[]
+  >([]);
+
+  const debouncedInternalWellAnnotations = useDebounce({
+    value: internalWellAnnotations,
+    delay: 50,
+  });
+
   useEffect(
     function sendSelectedDataIndicesToStreamlit() {
       if (data) {
         const next = {
           ...data,
-          foo,
+          wellAnnotations: debouncedInternalWellAnnotations,
         };
         setData(next);
       }
     },
-    [foo],
+    [debouncedInternalWellAnnotations],
   );
   useMock({ schema: StreamlitDataSchema });
 
@@ -51,7 +61,49 @@ function App() {
               colAnnotations={data.colAnnotations}
             />
           }
-          groups={[]}
+          groups={[
+            {
+              label: "Create Annotations",
+              type: "base",
+              items: [
+                ...data.wellAnnotations.map((ann) => ({
+                  id: ann.id,
+                  label: ann.label,
+                  onClick: () => {
+                    if (selection) {
+                      setInternalWellAnnotations((prev) => {
+                        const newAnn = {
+                          ...ann,
+                          wells: [...ann.wells, ...selection.wells],
+                        };
+                        return [...prev.filter((a) => a.id !== ann.id), newAnn];
+                      });
+                      setSelection(null);
+                    } else {
+                      alert("Select wells first");
+                    }
+                  },
+                })),
+                {
+                  id: "Clear Annotations",
+                  label: "Clear Annotations",
+                  onClick: () => {
+                    if (selection) {
+                      const selectedWells = selection.wells;
+                      const next = data.wellAnnotations.map((ann) => {
+                        const wells = ann.wells.filter(
+                          (w) => !selectedWells.includes(w),
+                        );
+                        return { ...ann, wells };
+                      });
+                      setInternalWellAnnotations(next);
+                      setSelection(null);
+                    }
+                  },
+                },
+              ],
+            },
+          ]}
         />
       </Card>
     </div>

@@ -1,30 +1,33 @@
 import { z } from "zod";
-export const FilterColumnSchema = z.object({
-  key: z.string(),
+
+const WellAnnotation = z.object({
+  id: z.string(),
+  wells: z.array(z.number()),
   label: z.string(),
-  values: z.union([z.array(z.string()), z.array(z.number())]),
-  filter_type: z.union([z.literal("text"), z.literal("number")]),
 });
-export type FilterColumn = z.infer<typeof FilterColumnSchema>;
+
+const RowAnnotation = z.object({
+  id: z.string(),
+  rows: z.array(z.number()),
+  label: z.string(),
+});
+
+const ColAnnotation = z.object({
+  id: z.string(),
+  cols: z.array(z.number()),
+  label: z.string(),
+});
+// replace import { PlateSelectionSchema } from "@nitro-bio/nitro-ui-premium";
+export const PlateSelectionSchema = z.object({
+  wells: z.array(z.number()),
+  className: z.string().optional(),
+});
 
 export const StreamlitDataSchema = z.object({
-  selectedDataIndices: z.array(z.number()),
-  x: z.array(z.coerce.number()),
-  xTitle: z.string().optional().nullable(),
-  y: z.array(z.coerce.number()),
-  yTitle: z.string().optional().nullable(),
-  z: z.array(z.coerce.number()).nullable().optional(),
-  zTitle: z.string().nullable().optional(),
-  marker: z.object({
-    size: z.array(z.coerce.number()),
-  }),
-  legendLabel: z.string(),
-  colorBy: z.union([z.array(z.coerce.number()), z.array(z.string())]),
-  filterColumns: z.array(FilterColumnSchema),
-  smiles: z.array(z.string()),
-  hovertext: z.array(z.array(z.coerce.string())),
-  overlayClassName: z.string(),
-  categorical: z.boolean().optional(),
+  wells: z.union([z.literal(24), z.literal(96), z.literal(48), z.literal(384)]),
+  rowAnnotations: z.array(RowAnnotation),
+  colAnnotations: z.array(ColAnnotation),
+  wellAnnotations: z.array(WellAnnotation),
+  selection: PlateSelectionSchema,
 });
-
 export type StreamlitData = z.infer<typeof StreamlitDataSchema>;
