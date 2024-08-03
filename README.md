@@ -1,4 +1,4 @@
-# molecule3dplot
+# streamlit_platemap
 
 Streamlit component for 3D Plotly plot w/ custom Molecule overlay
 
@@ -6,14 +6,14 @@ Streamlit component for 3D Plotly plot w/ custom Molecule overlay
 
 Start frontend build
 ```sh
-cd src/molecule3dplot/frontend
+cd src/streamlit_platemap/frontend
 pnpm i
 pnpm build:watch
 ```
 
 start backend
 ```sh
-cd src/molecule3dplot/
+cd src/streamlit_platemap/
 # install deps
 streamlit run __init__.py
 ```
@@ -21,7 +21,7 @@ streamlit run __init__.py
 ## Installation instructions 
 
 ```sh
-pip install molecule3dplot
+pip install streamlit_platemap
 ```
 
 ## Usage instructions
@@ -29,8 +29,8 @@ pip install molecule3dplot
 ```python
 import streamlit as st
 
-from molecule3dplot import molecule3dplot
+from streamlit_platemap import streamlit_platemap
 
-value = molecule3dplot()
+value = streamlit_platemap()
 
 st.write(value)

@@ -48,7 +48,7 @@ class StreamlitDataSchema:
     wellAnnotations: List[WellAnnotation]
 
 
-# Tell streamlit that there is a component called molecule3dplot,
+# Tell streamlit that there is a component called streamlit_platemap,
 # and that the code to display that component is in the "frontend" folder
 frontend_dir = (Path(__file__).parent / "frontend/dist").absolute()
 _component_func = components.declare_component(
