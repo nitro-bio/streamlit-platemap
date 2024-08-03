@@ -207,12 +207,13 @@ const wellAnnotationsToCSV = (
   const plateMap: string[][] = Array(rows)
     .fill(null)
     .map(() => Array(cols).fill(""));
-
-  wellAnnotations.forEach((annotation) => {
-    annotation.wells.forEach((wellIndex) => {
-      const row = Math.floor(wellIndex / cols);
-      const col = wellIndex % cols;
-      plateMap[row][col] += (plateMap[row][col] ? "\n" : "") + annotation.label;
+  Array.from({ length: rows }).forEach((_, i) => {
+    Array.from({ length: cols }).forEach((_, j) => {
+      const index = i * cols + j;
+      const annotationsForWell = wellAnnotations.filter((ann) =>
+        ann.wells.includes(index),
+      );
+      plateMap[i][j] = annotationsForWell.map((ann) => ann.label).join(" | ");
     });
   });
 
@@ -233,7 +234,6 @@ const wellAnnotationsToList = (
   wellAnnotations: WellAnnotation<Record<string, unknown>>[],
   wells: 24 | 96 | 48 | 384,
 ) => {
-  const { rows, cols } = wellsToRowsCols(wells);
   const annotationMap = new Map<number, string[]>();
 
   // Initialize the map with empty arrays for all wells
