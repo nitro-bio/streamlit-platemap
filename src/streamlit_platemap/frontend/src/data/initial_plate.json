@@ -5,19 +5,19 @@
       "cols": [0, 1, 2, 3],
       "label": "Patient 1",
       "id": "Patient 1",
-      "className": "bg-blue-500 text-blue-50 "
+      "color": "blue"
     },
     {
       "cols": [4, 5, 6, 7],
       "label": "Patient 2",
       "id": "Patient 2",
-      "className": "bg-lime-500 text-lime-50 "
+      "color": "green"
     },
     {
       "cols": [8, 9, 10, 11],
       "label": "Patient 3",
       "id": "Patient 3",
-      "className": "bg-fuchsia-500 text-fuchsia-50 "
+      "color": "fuchsia"
     }
   ],
   "rowAnnotations": [
@@ -25,19 +25,19 @@
       "rows": [0, 1],
       "label": "Antibody 1 μmol/L",
       "id": "Antibody 1 μmol/L",
-      "className": "bg-cyan-500 text-cyan-50 "
+      "color": "cyan"
     },
     {
       "rows": [3, 4],
       "label": "Antibody 2 μmol/L",
       "id": "Row Annotation 1",
-      "className": "bg-amber-500 text-amber-50 "
+      "color": "yellow"
     },
     {
       "rows": [6, 7],
       "label": "Antibody 3 μmol/L",
       "id": "Row Annotation 2",
-      "className": "bg-rose-500 text-rose-50 "
+      "color": "red"
     }
   ],
   "wellAnnotations": [
@@ -47,10 +47,8 @@
       "wells": [
         0, 12, 36, 48, 72, 84, 4, 16, 40, 52, 76, 88, 8, 20, 44, 56, 80, 92
       ],
-      "className": "bg-blue-500 text-blue-50 ",
-      "metadata": {
-        "foo": "bar"
-      }
+      "color": "blue",
+      "metadata": { "foo": "bar" }
     },
     {
       "id": "Treatment 2",
@@ -58,10 +56,8 @@
       "wells": [
         1, 13, 37, 49, 73, 85, 5, 17, 41, 53, 77, 89, 9, 21, 45, 57, 81, 93
       ],
-      "className": "bg-red-500 text-red-50 ",
-      "metadata": {
-        "foo": "bar"
-      }
+      "color": "red",
+      "metadata": { "foo": "bar" }
     },
     {
       "id": "Postive Control",
@@ -69,10 +65,8 @@
       "wells": [
         2, 14, 38, 50, 74, 86, 6, 18, 42, 54, 78, 90, 10, 22, 46, 58, 82, 94
       ],
-      "className": "bg-green-500 text-green-50 ",
-      "metadata": {
-        "foo": "bar"
-      }
+      "color": "green",
+      "metadata": { "foo": "bar" }
     },
     {
       "id": "Negative Control",
@@ -80,10 +74,8 @@
       "wells": [
         3, 15, 39, 51, 75, 87, 7, 19, 43, 55, 79, 91, 11, 23, 47, 59, 83, 95
       ],
-      "className": "bg-fuchsia-500 text-fuchsia-50 ",
-      "metadata": {
-        "foo": "bar"
-      }
+      "color": "fuchsia",
+      "metadata": { "foo": "bar" }
     }
   ]
 }

@@ -1,11 +1,18 @@
-import { useEffect, useRef, useState } from "react";
-
-import { Card, NitroContextMenu, classNames } from "@ninjha01/nitro-ui";
+import {
+  Button,
+  Card,
+  NitroContextMenu,
+  NitroTable,
+  SimpleTable,
+  classNames,
+} from "@ninjha01/nitro-ui";
 import {
   Plate,
   PlateSelection,
   WellAnnotation,
 } from "@nitro-bio/nitro-ui-premium";
+import { DownloadIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useDebounce } from "./hooks/useDebounce";
 import { useMock } from "./hooks/useMock";
 import { useStreamlit } from "./hooks/useStreamlit";
@@ -54,7 +61,7 @@ function App() {
     return null;
   }
   return (
-    <div ref={ref} className="light">
+    <div ref={ref} className="light flex gap-2">
       <Card className={classNames("max-w-4xl")}>
         <NitroContextMenu
           trigger={
@@ -125,6 +132,30 @@ function App() {
           ]}
         />
       </Card>
+      <Card className="flex flex-col gap-4">
+        <Button
+          variant="outline"
+          onClick={() => {
+            const csvString = wellAnnotationsToCSV(
+              data.wellAnnotations,
+              data.wells,
+            );
+            const blob = new Blob([csvString], { type: "text/csv" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "well_annotations.csv";
+            a.click();
+          }}
+          className="flex max-w-xs items-center justify-center gap-2"
+        >
+          Export <DownloadIcon className="h-4 w-4" />
+        </Button>
+        <NitroTable
+          data={wellAnnotationsToList(data.wellAnnotations, data.wells)}
+          pageSize={10}
+        />
+      </Card>
     </div>
   );
 }
@@ -137,4 +168,89 @@ const colorToClassName = {
   yellow: "bg-amber-400 text-amber-800",
   cyan: "bg-cyan-400 text-cyan-800",
   fuchsia: "bg-fuchsia-400 text-fuchsia-800",
+};
+
+export const wellsToRowsCols = (wells: 24 | 96 | 48 | 384) => {
+  switch (wells) {
+    case 24:
+      return { rows: 4, cols: 6 };
+    case 48:
+      return { rows: 6, cols: 8 };
+    case 96:
+      return { rows: 8, cols: 12 };
+    case 384:
+      return { rows: 16, cols: 24 };
+    default:
+      throw new Error("Invalid number of wells");
+  }
+};
+
+export const indexToCSVCell = (index: number, wells: 24 | 96 | 48 | 384) => {
+  const { cols } = wellsToRowsCols(wells);
+  const row = Math.floor(index / cols);
+  const col = index % cols;
+  return `${String.fromCharCode(65 + col)}${row + 1}`;
+};
+
+export const csvCellToIndex = (cell: string, wells: 24 | 96 | 48 | 384) => {
+  const { cols } = wellsToRowsCols(wells);
+  const col = cell.charCodeAt(0) - 65;
+  const row = parseInt(cell.slice(1)) - 1;
+  return row * cols + col;
+};
+
+const wellAnnotationsToCSV = (
+  wellAnnotations: WellAnnotation<Record<string, unknown>>[],
+  wells: 24 | 96 | 48 | 384,
+) => {
+  const { rows, cols } = wellsToRowsCols(wells);
+  const plateMap: string[][] = Array(rows)
+    .fill(null)
+    .map(() => Array(cols).fill(""));
+
+  wellAnnotations.forEach((annotation) => {
+    annotation.wells.forEach((wellIndex) => {
+      const row = Math.floor(wellIndex / cols);
+      const col = wellIndex % cols;
+      plateMap[row][col] += (plateMap[row][col] ? "\n" : "") + annotation.label;
+    });
+  });
+
+  const headerRow = Array(cols + 1)
+    .fill(0)
+    .map((_, i) => {
+      if (i === 0) {
+        return "idx";
+      }
+      return String.fromCharCode(65 + i - 1);
+    });
+  const csvRows = [headerRow, ...plateMap.map((row, i) => [i + 1, ...row])];
+
+  return csvRows.map((row) => row.join(",")).join("\n");
+};
+
+const wellAnnotationsToList = (
+  wellAnnotations: WellAnnotation<Record<string, unknown>>[],
+  wells: 24 | 96 | 48 | 384,
+) => {
+  const { rows, cols } = wellsToRowsCols(wells);
+  const annotationMap = new Map<number, string[]>();
+
+  // Initialize the map with empty arrays for all wells
+  for (let i = 0; i < wells; i++) {
+    annotationMap.set(i, []);
+  }
+
+  // Populate the map with annotations
+  wellAnnotations.forEach((annotation) => {
+    annotation.wells.forEach((wellIndex) => {
+      annotationMap.get(wellIndex)?.push(annotation.label);
+    });
+  });
+
+  // Convert to the desired output format
+  return Array.from(annotationMap, ([index, annotations]) => ({
+    well: indexToCSVCell(index, wells),
+    annotations: annotations.join(", "),
+  }));
 };

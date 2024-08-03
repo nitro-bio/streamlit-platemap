@@ -23,6 +23,9 @@ importers:
       daisyui:
         specifier: ^4.6.3
         version: 4.6.3(postcss@8.4.35)
+      lucide-react:
+        specifier: ^0.424.0
+        version: 0.424.0(react@18.2.0)
       nodemon:
         specifier: ^3.0.3
         version: 3.0.3
@@ -2965,6 +2968,11 @@ packages:
     resolution: {integrity: sha512-wPWxTzdss1CTz2aqcNWNlbh4YSnH9neJWP3RaeXepxpLCTW+pmu7WcT/wxJe+Q7Y7DqGOxAqakJv0pIK3431Ag==}
     peerDependencies:
       react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
+  lucide-react@0.424.0:
+    resolution: {integrity: sha512-x2Nj2aytk1iOyHqt4hKenfVlySq0rYxNeEf8hE0o+Yh0iE36Rqz0rkngVdv2uQtjZ70LAE73eeplhhptYt9x4Q==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc
 
   map-limit@0.0.1:
     resolution: {integrity: sha512-pJpcfLPnIF/Sk3taPW21G/RQsEEirGaFpCW3oXRwH9dnFHPHNGjNyvh++rdmC2fNqEaTw2MhYJraoJWAHx8kEg==}
@@ -7635,6 +7643,10 @@ snapshots:
       yallist: 4.0.0
 
   lucide-react@0.416.0(react@18.2.0):
+    dependencies:
+      react: 18.2.0
+
+  lucide-react@0.424.0(react@18.2.0):
     dependencies:
       react: 18.2.0
 

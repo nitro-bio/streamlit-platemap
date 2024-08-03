@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const colors = require("tailwindcss/colors");
 
-const brandColor = colors.sky;
+const brandColor = colors.teal;
 const noirColor = colors.zinc;
 export default {
   darkMode: "selector",
