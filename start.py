@@ -2,7 +2,8 @@ import streamlit as st
 from typing import Any, TypedDict, List, Union, Literal
 import streamlit_platemap
 
-mock_data = {
+st.set_page_config(layout="wide")
+initial_data = {
     "wells": 96,
     "colAnnotations": [
         {
@@ -156,12 +157,17 @@ mock_data = {
 def main():
     st.title("Custom Platemap")
     st.write("This is a custom platemap component")
-    wells = mock_data["wells"]
-    rowAnnotations = mock_data["rowAnnotations"]
-    colAnnotations = mock_data["colAnnotations"]
+    wells = initial_data["wells"]
+    # add input for wells
+
+    st.write("Initial Well Size")
+    wells = st.selectbox("Wells", [24, 48, 96, 384], index=2)
+
+    rowAnnotations = initial_data["rowAnnotations"]
+    colAnnotations = initial_data["colAnnotations"]
     if "wellAnnotations" not in st.session_state:
         print("initializing wellAnnotations")
-        st.session_state["wellAnnotations"] = mock_data["wellAnnotations"]
+        st.session_state["wellAnnotations"] = initial_data["wellAnnotations"]
     updated_wellAnnotations = platemap(
         wells, rowAnnotations, colAnnotations, st.session_state["wellAnnotations"]
     )

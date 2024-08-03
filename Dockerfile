@@ -9,8 +9,7 @@ RUN /install.sh && rm /install.sh
 
 WORKDIR /usr/src/app
 
-COPY dummy_data.csv ./
-COPY ./molecule3dplot-0.1.4.zip ./
+COPY *.zip ./
 COPY requirements.txt ./
 RUN /root/.cargo/bin/uv pip install --system --no-cache -r requirements.txt
 
