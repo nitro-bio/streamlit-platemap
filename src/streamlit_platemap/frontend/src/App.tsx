@@ -62,7 +62,7 @@ function App() {
   }
   return (
     <div ref={ref} className="light flex gap-2">
-      <Card className={classNames("max-w-4xl")}>
+      <Card className={classNames("w-2/3")}>
         <NitroContextMenu
           trigger={
             <Plate
@@ -132,7 +132,7 @@ function App() {
           ]}
         />
       </Card>
-      <Card className="flex flex-col gap-4">
+      <Card className="flex w-1/3 flex-col gap-4">
         <Button
           variant="outline"
           onClick={() => {
